@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Email Verification</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f2f2f2;
+            color: #333;
+            margin: 0;
+            padding: 0;
+        }
+
+        container {
+            max-width: 600px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+        }
+
+        h1 {
+            color: #007bff;
+        }
+
+        a {
+            display: inline-block;
+            padding: 10px 15px;
+            background-color: #007bff;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 4px;
+            transition: background-color 0.3s ease;
+        }
+
+        a:hover {
+            background-color: #0056b3;
+        }
+
+        p {
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+
+<body>
+    <container>
+        <h1>Email Verification</h1>
+        <p>Dear {{ user.name }},</p>
+        
+        <p>Thank you for registering with us! To complete your registration, please verify your email address by clicking the link below:</p>
+        
+        <a href="{{ verification_link }}">Verify Email</a>
+        
+        <p>Join the Whatsapp Community of ARTIMAS 2024 using the following link:<br>https://chat.whatsapp.com/Dcw4xj5vEGd2snNfAz5wWA</p>
+<!--         <p>If you did not register or received this email by mistake, please ignore it.</p> -->
+        
+        <p>Best regards,<br>AiMSA</p>
+    </container>
+</body>
+
+</html>

@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" href="{{ url_for('static', filename='images/favicon.ico') }}" type="image/x-icon">
+  
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
+  
+  <script src="https://codepen.io/Tibixx/pen/rRBKBm.js"></script>
+  <script src="https://codepen.io/DonKarlssonSan/pen/jBWaad.js"></script>
+  <link rel="stylesheet" href="{{ url_for('static', filename='lib/sweetalert.min.css') }}">
+  <script src="{{ url_for('static', filename='lib/jquery.min.js') }}"></script>
+  <script src="{{ url_for('static', filename='lib/sweetalert.min.js') }}"></script>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <title>ARTIMAS 2024 - Sign Up</title>
+  <style>
+
+    body{
+      background-color: black;
+      /* overflow: scroll; */
+    }
+  @import url(https://fonts.googleapis.com/css?family=Orbitron:700);
+
+    #space,
+    .stars {
+      overflow: hidden;
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+    }
+
+    .stars {
+      background-image:
+        radial-gradient(2px 2px at 20px 30px, #eee, rgba(0, 0, 0, 0)),
+        radial-gradient(2px 2px at 40px 70px, #fff, rgba(0, 0, 0, 0)),
+        radial-gradient(2px 2px at 50px 160px, #ddd, rgba(0, 0, 0, 0)),
+        radial-gradient(2px 2px at 90px 40px, #fff, rgba(0, 0, 0, 0)),
+        radial-gradient(2px 2px at 130px 80px, #fff, rgba(0, 0, 0, 0)),
+        radial-gradient(2px 2px at 160px 120px, #ddd, rgba(0, 0, 0, 0));
+      background-repeat: repeat;
+      background-size: 200px 200px;
+      animation: zoom 5s infinite;
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .stars:nth-child(1) {
+      background-position: 50% 50%;
+      animation-delay: 0s;
+    }
+
+    .stars:nth-child(2) {
+      background-position: 20% 60%;
+      animation-delay: 1s;
+    }
+
+    .stars:nth-child(3) {
+      background-position: -20% -30%;
+      animation-delay: 2s;
+    }
+
+    .stars:nth-child(4) {
+      background-position: 40% -80%;
+      animation-delay: 3s;
+    }
+
+    .stars:nth-child(5) {
+      background-position: -20% 30%;
+      animation-delay: 4s;
+    }
+
+    @keyframes zoom {
+      0% {
+        opacity: 0;
+        transform: scale(0.5);
+        animation-timing-function: ease-in;
+      }
+
+      85% {
+        opacity: 1;
+        transform: scale(2.8);
+        animation-timing-function: linear;
+      }
+
+      100% {
+        opacity: 0;
+        transform: scale(3.5);
+      }
+    }
+
+    #college,
+    #department,
+    option {
+      background-color: #ffffff;
+      color: black;
+    }
+/* @import url(https://fonts.googleapis.com/css?family=Dancing+Script); */
+
+
+    a {
+        text-decoration: none;
+        font-size: 1.5rem;
+    }
+
+    li {
+        list-style: none;
+        
+        /* font-family: 'Montserrat', sans-serif;
+         */
+  font-family: 'Orbitron', sans-serif;
+
+    }
+
+    b {
+        font-size: 1.5rem;
+    }
+
+    label,.label{
+        color: aliceblue;
+        text-align: left;
+    }
+
+    .navbar {
+            align-items: center;
+            justify-content: space-between;
+            padding: 4px 20px 0px 20px;
+            background-color: #0000002b;
+            /* color: #dd2222; */
+            position: absolute;
+            top: 0;
+            width: 100%;
+            left: 0%;
+            z-index: 1000;
+        }
+
+        .nav-links a,
+        .aa {
+            color: rgb(222, 252, 255);
+        }
+
+        .menu {
+            display: flex;
+            gap: 0rem;
+            font-size: 18px;
+            justify-content: flex-end;
+        }
+
+        .menu li:hover,
+        .aa:hover,
+        a:hover {
+            background-color: #3f788d3e;
+            color: #ffffff;
+            border-radius: 5px;
+            transition: 0.3s ease;
+            text-decoration: none;
+        }
+
+        .menu li {
+            padding: 5px 10px;
+            font-family: 'Orbitron', sans-serif;
+            size: 2.5rem;
+        }
+
+        .logo {
+            position: absolute;
+            left: 20px; /* Adjust as needed */
+        }
+
+        .navbar-toggler{
+            background-color: #ffffff;
+        }
+
+        @media (max-width: 768px) {
+            .menu {
+                flex-direction: column;
+            }
+
+            .navbar-toggler {
+                order: -1; /* Move the toggle button to the beginning */
+                right: 20px;
+                position: absolute;
+                top: 10px;
+            }
+
+            .navbar-collapse {
+                position: absolute;
+                width: 100%;
+                top: 50px; /* Adjust based on your logo height and navbar height */
+                background-color: #0000003d; /* Adjust to match navbar background */
+                left: 0;
+            }
+        }
+  </style>
+</head>
+
+<body>
+  <section class="top-nav" style="z-index: 100;">
+    <nav class="navbar navbar-expand-lg navbar-light">
+      <div class="logo">
+        <!-- Add your SVG logo here -->
+        <img src="{{ url_for('static', filename='images/logo_cropped.svg') }}" alt="Logo" height="27vh" />
+      </div>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+        aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon" style="background-color: white;"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="nav-links ml-auto">
+          <div class="menu">
+            <li><a href="{{url_for('index')}}"><b>Home</b></a></li>
+            <li><a href="{{url_for('events')}}"><b>Events</b></a></li>
+            <li><a href="{{ url_for('calendar') }}"> <b>Calendar</b>
+              </a></li>
+            <li><a href="{{ url_for('sponsors') }}"><b>Sponsors</b>
+              </a></li>
+            <!-- {% if current_user.is_authenticated %} -->
+  
+            <li><a href="{{url_for('profile')}}"><span class="glyphicon glyphicon-user"></span> <b>Profile</b></a></li>
+            <li><a href="{{ url_for('logout') }}"><span class="glyphicon glyphicon-log-out"></span>
+                <b>Logout</b> </a></li>
+            <!-- {% else %} -->
+            <li><a href="{{ url_for('login') }}"><span class="glyphicon glyphicon-log-in"></span> <b>Login</b>
+              </a></li>
+            <!-- {% endif %} -->
+          </div>
+        </ul>
+      </div>
+    </nav>
+  </section>
+
+
+  <div id="space">
+    <div class="login-wrap">
+      <div class="login-html">
+        <input id="tab-1" type="radio" name="tab" class="sign-in"><label for="tab-1" class="tab"><a
+            href="{{ url_for('login') }}" style="padding-bottom: 10px; font-size: 22px; color: rgb(91, 96, 118);">Sign In</a></label>
+        <input id="tab-2" type="radio" name="tab" class="sign-up" checked><label for="tab-2" class="tab">Sign
+          Up</label>
+        <div class="login-form">
+          <form method="POST" action="{{ url_for('register') }}">
+            <div class="sign-up-htm">
+              <div class="group">
+                <label for="name" class="label">Name</label>
+                <input id="name" type="text" class="input form-control" name="name" required>
+              </div>
+              <div class="group">
+                <label for="email" class="label">Email Address</label>
+                <input id="email" type="email" class="input form-control" name="email" required>
+              </div>
+              <div class="group">
+                <label for="password" class="label">Password</label>
+                <input id="password" type="password" class="input form-control" data-type="password" name="password"
+                  required>
+              </div>
+              <div class="group">
+                <label for="college" class="label" >College</label>
+                <!--                             <input id="college" type="text" class="input form-control" name="college" required> -->
+                <select name="college" class="form-control input browser-default custom-select" required style="padding: 0px 10px;">
+                  <option value="" disabled selected>Select the college</option>
+
+                  <!-- PCCOE -->
+                  <option name="College" id="college" class="form-control input" data-college="PCCOE" value="PCCOE">
+                    PCCOE</option>
+
+                  <!-- PCCOER -->
+                  <option name="College" id="college" class="form-control input" data-college="PCCOER" value="PCCOER">
+                    PCCOER</option>
+
+                  <!-- DYP Akurdi -->
+                  <option name="College" id="college" class="form-control input" data-college="DYP-AKURDI"
+                    value="DYP-AKURDI">DYP Akurdi</option>
+
+                  <!-- DYP Pimpri -->
+                  <option name="College" id="college" class="form-control input" data-college="DYP-PIMPRI"
+                    value="DYP-PIMPRI">DYP Pimpri</option>
+
+                  <!-- VIT Pune -->
+                  <option name="College" id="college" class="form-control input" data-college="VIT-PUNE"
+                    value="VIT-PUNE">VIT Pune</option>
+
+                  <!-- PICT -->
+                  <option name="College" id="college" class="form-control input" data-college="PICT" value="PICT">PICT
+                  </option>
+
+                  <!-- COEP -->
+                  <option name="College" id="college" class="form-control input" data-college="COEP" value="COEP">COEP
+                  </option>
+
+                  <!-- MIT WPU -->
+                  <option name="College" id="college" class="form-control input" data-college="MIT-WPU" value="MIT-WPU">
+                    MIT WPU</option>
+
+                  <!-- PCU -->
+                  <option name="College" id="college" class="form-control input" data-college="PCU" value="PCU">PCU
+                  </option>
+
+                  <!-- NCER -->
+                  <option name="College" id="college" class="form-control input" data-college="NCER" value="NCER">NCER
+                  </option>
+
+                  <!-- NMIET -->
+                  <option name="College" id="college" class="form-control input" data-college="NMIET" value="NMIET">
+                    NMIET</option>
+
+                  <option name="College" id="college" class="form-control input" data-college="PCP" value="PCP">PCP
+                  </option>
+
+
+
+                </select>
+              </div>
+              <div class="group">
+                <label for="department" class="label" >Department</label>
+                <!--                           <input id="department" type="text" class="input form-control" name="department" required> -->
+                <select name="department" class="form-control input browser-default custom-select" required style="padding:0px 10px">
+                  <option value="" disabled selected>Select the department</option>
+
+                  <option name="Department" id="department" class="form-control input" data-department="CHEM"
+                    value="CHEM">Chemical
+                    Engineering</option>
+
+                  <option name="Department" id="department" class="form-control input" data-department="COMP"
+                    value="COMP">Computer
+                    Engineering</option>
+
+                  <option name="Department" id="department" class="form-control input" data-department="E&TC"
+                    value="E&TC">E & TC
+                    Engineering (Electronics & Telecommunication Engineering)</option>
+
+                  <option name="Department" id="department" class="form-control input" data-department="IT" value="IT">
+                    Information
+                    Technology</option>
+
+                  <option name="Department" id="department" class="form-control input" data-department="INST"
+                    value="INST">
+                    Instrumentation
+                    & Control Engineering</option>
+
+                  <option name="Department" id="department" class="form-control input" data-department="MECH"
+                    value="MECH">Mechanical
+                    Engineering</option>
+
+                  <option name="Department" id="department" class="form-control input" data-department="AI-DS"
+                    value="AI-DS">
+                    Artificial
+                    Intelligence and Data Science</option>
+
+                  <option name="Department" id="department" class="form-control input" data-department="CS-AI"
+                    value="CS-AI">Computer
+                    Sciences & Engineering (Artificial Intelligence)</option>
+
+                  <option name="Department" id="department" class="form-control input" data-department="CS-ML"
+                    value="CS-ML">Computer
+                    Sciences & Engineering (Artificial Intelligence & Machine Learning)</option>
+
+                  <option name="Department" id="department" class="form-control input" data-department="CIVIL"
+                    value="CIVIL">Civil
+                    Engineering</option>
+
+                  <option name="Department" id="department" class="form-control input" data-department="EE" value="EE">
+                    Electrical
+                    Engineering</option>
+
+                  <option name="Department" id="department" class="form-control input" data-department="ROBOT"
+                    value="ROBOT">Robotics
+                    and
+                    Automation</option>
+
+                  <option name="Department" id="department" class="form-control input" data-department="ESH"
+                    value="ESH">Engineering,
+                    Science and Humanities</option>
+
+                  <option name="Department" id="department" class="form-control input" data-department="IPE"
+                    value="IPE">Industrial &
+                    Production Engineering</option>
+
+                  <option name="Department" id="department" class="form-control input" data-department="MMT"
+                    value="MMT">Metallurgy &
+                    Material Technology</option>
+
+                  <option name="Department" id="department" class="form-control input" data-department="MSE"
+                    value="MSE">Manufacturing
+                    Science & Engineering</option>
+
+                  <option name="Department" id="department" class="form-control input" data-department="BIOE"
+                    value="BIOE">
+                    Bioengineering
+                  </option>
+
+                  <option name="Department" id="department" class="form-control input" data-department="CS-CYBER"
+                    value="CS-CYBER">
+                    Computer Science And Engineering (Cyber Security And Forensics)</option>
+
+                  <option name="Department" id="department" class="form-control input" data-department="ECE"
+                    value="ECE">Electrical
+                    And
+                    Computer Engineering</option>
+
+                  <option name="Department" id="department" class="form-control input" data-department="ECE-AIML"
+                    value="ECE-AIML">
+                    Electronics And Communication Engineering (Artificial Intelligence And Machine Learning)</option>
+
+                  <option name="Department" id="department" class="form-control input" data-department="MSE"
+                    value="MSE">Materials
+                    Science
+                    And Engineering</option>
+
+                  <option name="Department" id="department" class="form-control input" data-department="PE" value="PE">
+                    Petroleum
+                    Engineering</option>
+
+                </select>
+              </div>
+              <div class="group">
+                <label for="phone" class="label">Phone No. (10 digits)</label>
+                <input id="phone" type="tel" pattern="[0-9]{10}" class="input form-control" name="phone" required>
+              </div>
+              <div class="group">
+                <button type="submit" class="button">Sign Up</button>
+              </div>
+            </div>
+          </form>
+
+        </div>
+        {% if message %}
+        <div class="message" data-type="{{ message_type }}" style="display: none;">{{ message }}</div>
+        {% endif %}
+        <script>
+          document.addEventListener("DOMContentLoaded", function () {
+            swal("Info", 'If you belong to PCCOE please use your College email.', "info");
+            if (document.querySelector('.message')) {
+              var messageType = document.querySelector('.message').getAttribute('data-type');
+              var messageText = document.querySelector('.message').textContent;
+
+              if (messageType === 'success') {
+                swal("Success", messageText, "success");
+              } else if (messageType === 'warning') {
+                swal("Error", messageText, "warning");
+              } else if (messageType === 'error') {
+                swal("Error", messageText, "error");
+              }
+            }
+          });
+        </script>
+      </div>
+    </div>
+    <div class="stars"></div>
+    <div class="stars"></div>
+    <div class="stars"></div>
+    <div class="stars"></div>
+    <div class="stars"></div>
+  </div>
+</body>
+
+</html>

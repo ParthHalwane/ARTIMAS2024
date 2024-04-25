@@ -1,0 +1,1056 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Artimas 2024</title>
+    <link rel="icon" href="{{ url_for('static', filename='images/favicon.ico') }}" type="image/x-icon">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&display=swap">
+    <script src="https://unpkg.com/three@0.139.2/build/three.min.js"></script>
+    <script src="https://unpkg.com/three@0.139.2/examples/js/controls/OrbitControls.js"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+
+
+</head>
+
+<style>
+    @import url(https://fonts.googleapis.com/css?family=Orbitron:700);
+
+    body {
+        margin: 0;
+        overflow: hidden;
+        width: 100vw;
+        height: 100vh;
+        /* background-color: #070707; */
+        background-image: url('https://png.pngtree.com/thumb_back/fh260/background/20200706/pngtree-blue-nebula-universe-space-planet-background-image_347719.jpg');
+        background-blend-mode: darken;
+        background-size: cover;
+        /* filter: blur(5px); */
+    }
+
+    canvas {
+        display: block;
+        position: absolute;
+        top: 0;
+        background-color: #09002a8a;
+        backdrop-filter: blur(3px);
+    }
+
+    #canvas_container {
+        width: 100%;
+        height: 100vh;
+    }
+
+    button {
+        position: absolute;
+        bottom: 5%;
+        font-size: 0.9rem;
+        padding: 0.5rem 0.9em;
+        background: #000000;
+        color: white;
+        cursor: pointer;
+        transition: all .3s;
+    }
+
+    #toggleLeft,
+    #toggleRight {
+        font-size: 1.5rem;
+        background: none;
+        border: none;
+        color: white;
+        cursor: pointer;
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+    }
+
+    #toggleLeft {
+        left: 10px;
+    }
+
+    #toggleRight {
+        right: 10px;
+    }
+
+    #toggleLeft i,
+    #toggleRight i {
+        color: white;
+        font-size: 3vh;
+    }
+
+    button:hover {
+        background: #ffffff;
+        color: #000000;
+    }
+
+    #canvasWrapper {
+        width: 100%;
+        height: 100vh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+    }
+
+    @media screen and (max-width: 600px) {
+        canvas {
+            width: 100%;
+            height: 100vh;
+            display: block;
+        }
+    }
+
+    .profile-options a {
+        display: block;
+        padding: 10px;
+        color: #FFFFFF;
+        text-decoration: none;
+    }
+
+    .blog-slider {
+        width: 85%;
+        max-width: 800px;
+        background: rgba(67, 67, 67, 0.431);
+        /* Semi-transparent white background */
+        box-shadow: 0px 14px 80px rgba(34, 35, 58, 0.2);
+        padding: 25px;
+        border-radius: 25px;
+        transition: all .3s;
+        margin-top: 15px;
+        /* top:30% */
+    }
+
+    .blog-slider__item {
+        display: flex;
+        align-items: center;
+        text-align: center;
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+
+    .blog-slider__img {
+        min-width: 250px;
+        width: 45%;
+        height: 100%;
+    }
+
+    img {
+        width: 100%;
+        object-fit: cover;
+        display: block;
+        opacity: 1;
+        border-radius: 20px;
+        transition: all .3s;
+    }
+
+    .blog-slider__content {
+        padding: 0 15px;
+    }
+
+    .blog-slider__content {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        width: 45%;
+        min-width: 300px;
+    }
+
+    .blog-slider__code {
+        color: #e0e0e0;
+        margin-bottom: 10px;
+        display: block;
+        font-weight: 500;
+    }
+
+    .blog-slider__title {
+        font-size: 24px;
+        font-weight: 700;
+        color: #fff;
+        /* White text color */
+        margin-bottom: 15px;
+    }
+
+    .blog-slider__text {
+        color: #fff;
+        /* White text color */
+        margin-bottom: 20px;
+        line-height: 1.5em;
+        /* -webkit-text-stroke: 0.5px #000; */
+    }
+
+    #posterDiv {
+        pointer-events: none;
+        display: none;
+        position: absolute;
+        /* top: 45%; */
+        justify-content: center;
+        /* display: flex; */
+        opacity: 0;
+        /* Initial opacity is set to 0 */
+        animation: fadeIn 1s ease-in-out forwards;
+        /* Animation name, duration, timing function, and fill mode */
+    }
+
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+            /* Starting opacity */
+        }
+
+        to {
+            opacity: 1;
+            /* Ending opacity */
+        }
+    }
+
+    .blog-slider__button1,
+    .blog-slider__button2 {
+        display: inline-flex;
+        background-image: linear-gradient(147deg, #1a8aebbb 0%, #0080e1 74%);
+        padding: 15px 35px;
+        border-radius: 10px;
+        color: #fff;
+        box-shadow: 0px 14px 80px rgba(80, 80, 255, 0.4);
+        border-width: 4px;
+        text-decoration: none;
+        font-weight: 500;
+        justify-content: center;
+        text-align: center;
+        letter-spacing: 1px;
+        pointer-events: painted;
+        margin: 1vw;
+        width: 125px;
+    }
+
+    .globe-label {
+        position: absolute;
+        bottom: 20px;
+        left: 50%;
+        font-size: 16px;
+        transform: translateX(-50%);
+        /* background: rgba(0, 0, 0, 0.5); */
+        font-family: 'Orbitron', sans-serif;
+        z-index: 150;
+        color: white;
+        padding: 5px;
+        border-radius: 5px;
+        display: none;
+    }
+
+
+    /* -------------------------------------------------------- */
+    .tutorial-container {
+        padding: 20px;
+        background-color: #43384da5;
+        border-radius: 8px;
+        transition: background-color 0.5s;
+        max-width: 600px;
+        width: 80%;
+        min-width: 300px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        display: block;
+        justify-content: center;
+        position: absolute;
+        z-index: 150;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        pointer-events: none;
+    }
+
+    .step {
+        display: none;
+        opacity: 0;
+        transition: opacity 0.5s;
+    }
+
+    .active {
+        display: block;
+        opacity: 1;
+    }
+
+    h2,
+    p {
+        margin: 0;
+        color: #fff;
+        /* Text color */
+    }
+
+    /* ------------------------------------------------------------------------------------- */
+
+    /* ////////////////////////////////////////////////////////////////////////////// */
+
+    .circle {
+        /* display: inline-block; */
+        background-color: rgb(3, 43, 142);
+        margin: 10px;
+        border-radius: 50%;
+        height: 50%;
+    }
+
+    .circle-inner {
+        color: rgb(31, 209, 253);
+        display: table-cell;
+        vertical-align: middle;
+        text-align: center;
+        text-decoration: none;
+        height: 40px;
+        width: 40px;
+        font-size: 20px;
+    }
+
+    a {
+        text-decoration: none;
+        font-size: 1.5rem;
+    }
+
+    li {
+        list-style: none;
+        /* font-family: 'Montserrat', sans-serif;
+         */
+        font-family: 'Orbitron', sans-serif;
+
+    }
+
+    b {
+        font-size: 1.5rem;
+    }
+
+    .navbar {
+        align-items: center;
+        justify-content: space-between;
+        padding: 4px 20px 0px 20px;
+        background-color: #0000002b;
+        /* color: #dd2222; */
+        position: absolute;
+        top: 0;
+        width: 100%;
+        left: 0%;
+        z-index: 1000;
+    }
+
+    .nav-links a,
+    .aa {
+        color: rgb(222, 252, 255);
+    }
+
+    .menu {
+        display: flex;
+        gap: 0rem;
+        font-size: 18px;
+        justify-content: flex-end;
+    }
+
+    .menu li:hover,
+    .aa:hover,
+    a:hover {
+        background-color: #3f788d3e;
+        color: #ffffff;
+        border-radius: 5px;
+        transition: 0.3s ease;
+        text-decoration: none;
+    }
+
+    .menu li {
+        padding: 5px 10px;
+        font-family: 'Orbitron', sans-serif;
+        size: 2.5rem;
+    }
+
+    .logo {
+        position: absolute;
+        left: 20px;
+        /* Adjust as needed */
+    }
+
+    .navbar-toggler {
+        background-color: #ffffff;
+    }
+
+    @media (max-width: 768px) {
+        .menu {
+            flex-direction: column;
+        }
+
+        .navbar-toggler {
+            order: -1;
+            /* Move the toggle button to the beginning */
+            right: 20px;
+            position: absolute;
+            top: 10px;
+        }
+
+        .navbar-collapse {
+            position: absolute;
+            width: 100%;
+            top: 50px;
+            /* Adjust based on your logo height and navbar height */
+            background-color: #0000007d;
+            /* Adjust to match navbar background */
+            left: 0;
+        }
+    }
+
+
+    #tooltip {
+        position: fixed;
+        bottom: 25px;
+        right: 20px;
+        background-color: #33333321;
+        color: white;
+        padding: 3px;
+        border-radius: 50%;
+        border: 2px solid aliceblue;
+        cursor: pointer;
+        width: 25px;
+        /* Adjust the width and height as needed */
+        height: 25px;
+        /* Adjust the width and height as needed */
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+
+    #tooltip-content {
+        display: none;
+        position: fixed;
+        bottom: 50px;
+        right: 20px;
+        background-color: #333;
+        color: white;
+        padding: 10px;
+        border-radius: 5px;
+        max-width: 300px;
+    }
+
+    #tooltip-content p {
+        margin: 0;
+    }
+
+    .logo-details {
+        position: fixed;
+        bottom: 20px;
+        left: min(20px, 0.5vh);
+        /* background-color: #3333334d; */
+        /* color: white;  */
+        /* padding: 3px; */
+        /* border-radius: 50%; */
+        /* border: 2px solid aliceblue; */
+        cursor: pointer;
+        /* width: 40px;  Adjust the width and height as needed */
+        /* height: 15px; Adjust the width and height as needed */
+        /* display: none; */
+        align-items: center;
+        margin-left: 6px;
+        justify-content: center;
+    }
+
+    .logo-details img {
+        width: max(7vh, 100px);
+    }
+
+    .toast_for_aimsa {
+        visibility: visible;
+        background-color: #3333337e;
+        color: #fff;
+        text-align: center;
+        border-radius: 2px;
+        padding: 16px;
+        position: fixed;
+        z-index: 1000;
+        left: 0;
+        top: 7vh;
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    /* Close button style */
+    .close-button {
+        color: #fff;
+        font-weight: bold;
+        cursor: pointer;
+        /* padding: 8px; */
+        right: 10px;
+        margin-bottom: 10px;
+        /* top: 50%; */
+        /* Add padding to make the button more clickable */
+        /* margin-right: 5vw; */
+        /* Add margin to separate the button from the message */
+        background-color: rgba(252, 0, 0, 0.387);
+        /* Semi-transparent background */
+        border: none;
+        border-radius: 50%;
+        /* Make the button circular */
+    }
+
+    /* Show the toast */
+    .show {
+        animation: fadeIn 0.5s;
+    }
+
+    /* Animation for showing the toast */
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+        }
+
+        to {
+            opacity: 1;
+        }
+    }
+</style>
+
+<body>
+    <section class="top-nav" style="z-index: 100;">
+        <nav class="navbar navbar-expand-lg navbar-light">
+            <div class="logo">
+                <!-- Add your SVG logo here -->
+                <img src="{{ url_for('static', filename='images/logo_cropped.svg') }}" alt="Logo" height="27vh" />
+            </div>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon" style="background-color: white;"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="nav-links ml-auto">
+                    <div class="menu">
+                        <li><a href="{{url_for('index')}}"><b>Home</b></a></li>
+                        <li><a href="{{url_for('events')}}"><b>Events</b></a></li>
+                        <li><a href="{{ url_for('calendar') }}"><b>Calendar</b>
+                            </a></li>
+                        <li><a href="{{ url_for('sponsors') }}"><b>Sponsors</b>
+                            </a></li>
+                        <li><a href="{{url_for('profile')}}"><span class="glyphicon glyphicon-user"></span>
+                                <b>Profile</b></a></li>
+                        <!-- {% if current_user.is_authenticated %} -->
+                        <li><a href="{{ url_for('logout') }}"><span class="glyphicon glyphicon-log-out"></span>
+                                <b>Logout</b> </a></li>
+
+
+                        <!-- {% else %} -->
+                        <li><a href="{{ url_for('login') }}"><span class="glyphicon glyphicon-log-in"></span>
+                                <b>Login</b>
+                            </a></li>
+                        <!-- {% endif %} -->
+                    </div>
+                </ul>
+            </div>
+        </nav>
+    </section>
+
+    <div class="tutorial-container">
+        <div id="step-1" class="step active">
+            <h2>Step 1: Explore</h2>
+            <p>Zoom-in to explore the Universe and access the event.</p>
+        </div>
+
+        <div id="step-2" class="step">
+            <h2>Step 2: Travel</h2>
+            <p>Use the Toggles to navigate through different Universes</p>
+            <!-- <button class="temp-button" onclick="completeTutorial()">Complete Tutorial</button> -->
+        </div>
+    </div>
+
+    <div id="canvasWrapper">
+
+        <div id="canvas_container"></div>
+        <button id="toggleLeft" onclick="toggleTextures(-1)"><i class="fa fa-chevron-left"></i></button>
+        <button id="toggleRight" onclick="toggleTextures(1)"><i class="fa fa-chevron-right"></i></button>
+        <div class="globe-label" id="globeLabel1" style="display: block;">Houdini Heist</div>
+        <div class="globe-label" id="globeLabel2">Hack Matrix</div>
+        <div class="globe-label" id="globeLabel3">Among Us</div>
+        <div class="globe-label" id="globeLabel4">Neuro Drain</div>
+        <div class="globe-label" id="globeLabel5">Adrenaline Rush</div>
+        <div class="globe-label" id="globeLabel6">Pixel Perfect</div>
+
+        <div id="posterDiv" style="display: none; position: absolute;">
+            <div class="blog-slider">
+
+                <div class="blog-slider__item swiper-slide">
+                    <div class="blog-slider__img" style="padding: 0px 4px; padding-top: -4px;">
+                        <img src="https://i.ibb.co/PGKYwyz/ACTION-HH.jpg" alt="">
+                    </div>
+                    <div class="blog-slider__content">
+                        <span class="blog-slider__code">23 February 2024</span>
+                        <div class="blog-slider__title">Houdini Heist</div>
+                        <div class="blog-slider__text">Join Houdini's Quest , Solve Puzzles with Zest, Break free from
+                            the Heist, be put to the Test</div>
+                        <a href="/houdiniheist" class="blog-slider__button1">Register</a>
+                        <a href="https://drive.google.com/file/d/1OxKinSvDbYXrBrgSWatVf75YABkCfMA-/view?usp=drive_link"
+                            class="blog-slider__button2">Rulebook</a>
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <div class="logo-details">
+        <a href="{{ url_for('contact') }}"><i class="fas fa-phone contact-icon" style="color: white; border:2px solid white ;border-radius: 50%; padding: 4px;"></i></a>
+        <!-- <span class="logo_name">AiMSA</span> -->
+    </div>
+
+    <div id="tooltip">&#63;</div>
+
+    <div id="tooltip-content">
+        <p>Zoom-In to Explore the Universe</p>
+        <p>Use toggles to Navigate through </p>
+
+    </div>
+
+    <div id="toast_for_aimsa" class="toast_for_aimsa">
+        <span id="toast-message">Zoom-In to Explore into the Universe</span>
+        <button class="close-button" onclick="closeToast()">x</button>
+    </div>
+
+
+    <script>
+
+        let renderer, scene, camera, sphereBg, stars, controls, container = document.getElementById("canvas_container");
+        let timeout_Debounce;
+        let cameraSpeed = 0;
+        let blobScale = 0;
+        let p = 0;
+        let posterDivVisible = false; // Variable to track visibility
+
+        let globeNames = ["Globe 1", "Globe 2", 'Globe 3', 'Globe 4', 'Globe 5'];
+
+        let posters = [
+            "https://i.ibb.co/PGKYwyz/ACTION-HH.jpg",
+            "https://i.ibb.co/1RdQRV6/ACTION-HACK.jpg",
+            "https://i.ibb.co/VgFGPbF/ACTION-EX.jpg",
+            "https://i.ibb.co/8zyw34z/ACTION-QUIZ.jpg",
+            "https://i.ibb.co/P9DKqxs/ACTION-VR.jpg",
+            "https://i.ibb.co/8rCqBgf/ACTION-PHOTO.jpg",
+            // Add more poster URLs as needed
+        ];
+
+        let postTitles = [
+            "Houdini Heist",
+            "Hack Matrix",
+            "Among Us",
+            "Neuro Drain",
+            "Adrenaline Rush",
+            "Pixel Perfect"
+            // Add more titles as needed
+        ];
+
+        let postDates = [
+            "23 February 2024",
+            "17-18 February 2024 (Online) & 22-23 February 2024 (Offline)",
+            "22 February 2024",
+            "22 February 2024",
+            "22-23 February 2024",
+            "22 February 2024"
+            // Add more dates as needed
+        ];
+
+        let postContents = [
+            "Join Houdini's Quest , Solve Puzzles with Zest, Break free from the Heist, be put to the Test",
+            "Enter the Matrix where Innovation meets Technology (Food is only available for offline round)",
+            "There is an Imposter Among Us",
+            'Gear up for Neuro Drain cause its time for Big Brain',
+            "Dive into the World Beyond Reality. (On-Spot Registerations)",
+            "Don't Photograph what you see , Photograph what you feel about it."
+        ];
+
+        let postLinks = [
+            "/houdiniheist",
+            '/hackmatrix',
+            '/amongus',
+            '/neurodrain',
+            '/events',
+            '/pixelperfect',
+            // Add more links as needed
+        ];
+
+        let rulebooks = [
+            'https://drive.google.com/file/d/1OxKinSvDbYXrBrgSWatVf75YABkCfMA-/view?usp=drive_link',
+            'https://drive.google.com/file/d/1YIBoSjEMq4bSAaQUl0iEMVKSzG3vmJt-/view?usp=sharing',
+            'https://drive.google.com/file/d/1dpkohSZ3PnWRv2AA7XMxKbyRT47S9urL/view?usp=drive_link',
+            'https://drive.google.com/file/d/1y02i_C07Yr7WDGawuJLsrql0TyZWRgXN/view?usp=drive_link',
+            'https://drive.google.com/file/d/1OyZ6Ux4hmQAd0J4cpuuYXjXMAAgsOk-g/view?usp=drivesdk',
+            'https://drive.google.com/file/d/1bA8eJC0ePheE2U6Y50wOL9o6QDMVNhT7/view?usp=drive_link',
+            // Add more links as needed
+        ];
+
+        const loader = new THREE.TextureLoader();
+
+        let textureSphereBg = [];
+
+        // let textureSphereBg = [];
+        let textureStar = [];
+        let texture1 = [];
+        let texture2 = [];
+        let texture4 = [];
+        let stars_in_scene = [];
+
+        preloadTextures();
+
+        init();
+        animate();
+
+        function preloadTextures() {
+            textureSphereBg.push(loader.load('https://i.ibb.co/fXQ4w42/HD-wallpaper-nebula-stars-galaxy-universe-green-space.jpg'));
+            textureSphereBg.push(loader.load('https://i.ibb.co/C7BnrL9/abstract-blue-gold-streak-neon-lights-607202-142.jpg'));
+            textureSphereBg.push(loader.load('https://i.ibb.co/hcN2qXk/star-nc8wkw.jpg'));
+            textureSphereBg.push(loader.load('https://i.ibb.co/4gHcRZD/bg3-je3ddz.jpg'));
+            textureSphereBg.push(loader.load('https://i.ibb.co/nbzKhT7/galaxy-texture-with-stars-beautiful-nebula-background-style-dark-pink-dark-gray-generative-ai-58409.jpg'));
+            textureSphereBg.push(loader.load('https://i.ibb.co/tLQJKhX/night-starry-sky-milky-way-600nw-1595624359.jpg'));
+
+            // textureStar.push(loader.load("https://i.ibb.co/ZcjFxbn/pngwing-com.png"));
+            // textureStar.push(loader.load("https://i.ibb.co/ZKsdYSz/p1-g3zb2a.png"));
+            // textureStar.push(loader.load("https://i.ibb.co/ZKsdYSz/p1-g3zb2a.png"));
+            // textureStar.push(loader.load("https://i.ibb.co/ZKsdYSz/p1-g3zb2a.png"));
+            // textureStar.push(loader.load("https://i.ibb.co/ZKsdYSz/p1-g3zb2a.png"));
+            // textureStar.push(loader.load("https://i.ibb.co/ZKsdYSz/p1-g3zb2a.png"));
+
+            // texture1.push(loader.load("https://i.ibb.co/jytPkzs/pngwing-com-1.png"));
+            texture1.push(loader.load("https://i.ibb.co/F8by6wW/p2-b3gnym.png"));
+            // texture1.push(loader.load("https://i.ibb.co/F8by6wW/p2-b3gnym.png"));
+            // texture1.push(loader.load("https://i.ibb.co/F8by6wW/p2-b3gnym.png"));
+            // texture1.push(loader.load("https://i.ibb.co/F8by6wW/p2-b3gnym.png"));
+            // texture1.push(loader.load("https://i.ibb.co/F8by6wW/p2-b3gnym.png"));
+
+            // texture2.push(loader.load("https://i.ibb.co/T1QwFvZ/pngwing-com-2.png"));
+            texture2.push(loader.load("https://i.ibb.co/yYS2yx5/p3-ttfn70.png"));
+            // texture2.push(loader.load("https://i.ibb.co/yYS2yx5/p3-ttfn70.png"));
+            // texture2.push(loader.load("https://i.ibb.co/yYS2yx5/p3-ttfn70.png"));
+            // texture2.push(loader.load("https://i.ibb.co/yYS2yx5/p3-ttfn70.png"));
+            // texture2.push(loader.load("https://i.ibb.co/yYS2yx5/p3-ttfn70.png"));
+
+            texture4.push(loader.load("https://i.ibb.co/yWfKkHh/p4-avirap.png"));
+            // texture4.push(loader.load("https://i.ibb.co/yWfKkHh/p4-avirap.png"));
+            // texture4.push(loader.load("https://i.ibb.co/yWfKkHh/p4-avirap.png"));
+            // texture4.push(loader.load("https://i.ibb.co/yWfKkHh/p4-avirap.png"));
+            // texture4.push(loader.load("https://i.ibb.co/yWfKkHh/p4-avirap.png"));
+            // texture4.push(loader.load("https://i.ibb.co/yWfKkHh/p4-avirap.png"));
+
+
+        }
+
+
+        function init() {
+            scene = new THREE.Scene();
+
+            camera = new THREE.PerspectiveCamera(55, window.innerWidth / window.innerHeight, 0.01, 1000);
+
+            camera.position.set(0, 0, 400);
+
+            let ambientLight = new THREE.AmbientLight("#ffffff", 15);
+            ambientLight.position.set(0, 20, 20);
+            scene.add(ambientLight);
+
+            // Add directional light from behind the globe
+            let directionalLight = new THREE.DirectionalLight("#ffffff", 50);
+            directionalLight.position.set(0, 0, -1); // Behind the globe
+            scene.add(directionalLight);
+
+            renderer = new THREE.WebGLRenderer({
+                antialias: true,
+                alpha: true,
+
+            });
+            renderer.setSize(container.clientWidth, container.clientHeight);
+            renderer.setPixelRatio(window.devicePixelRatio);
+            container.appendChild(renderer.domElement);
+
+            controls = new THREE.OrbitControls(camera, renderer.domElement);
+            controls.autoRotate = true;
+            controls.autoRotateSpeed = 4;
+            controls.minDistance = 150;
+            controls.enablePan = false;
+
+            // Adjust maxDistance based on the device type
+            if (isMobile()) {
+                controls.maxDistance = 700;
+                camera.position.set(0, 0, 600);
+            } else {
+                controls.maxDistance = 400;
+            }
+
+            // Set maxPolarAngle to allow interaction with the globe even when zoomed in
+            controls.maxPolarAngle = Math.PI / 2 - 0.1; // Set an angle slightly less than 90 degrees
+
+            createSphereWithTexture(textureSphereBg[p]);
+
+            // scene.add(createStars(textureStar[0], 25, 10));
+            stars_in_scene = [(createStars(texture1[0], 20, 25)),
+            (createStars(texture2[0], 20, 25)),
+            (createStars(texture4[0], 17, 10))]
+
+            // scene.add(stars_in_scene);
+            stars_in_scene.forEach(stars => scene.add(stars));
+
+
+        }
+
+        function createSphereWithTexture(texture) {
+            let geometrySphereBg = new THREE.SphereBufferGeometry(150, 40, 40);
+
+            // Use MeshStandardMaterial for a physically-based material
+            let materialSphereBg = new THREE.MeshStandardMaterial({
+                side: THREE.BackSide,
+                map: texture,
+                roughness: 0.1, // Adjust this value for glossiness
+                metalness: 0.9,
+                // alphaTest:0.7,
+                // blending: THREE.AdditiveBlending, // Adjust this value for metal-like appearance
+            });
+            texture.generateMipmaps = false;  // or true, depending on your needs
+            texture.minFilter = THREE.LinearFilter;  // or other appropriate filter
+
+            sphereBg = new THREE.Mesh(geometrySphereBg, materialSphereBg);
+            scene.add(sphereBg);
+        }
+
+
+        function createStars(texture, size, total) {
+            let pointGeometry = new THREE.BufferGeometry();
+            let pointMaterial = new THREE.PointsMaterial({
+                size: size,
+                map: texture,
+                alphaTest: 0.9, // Adjust the value as needed/
+                side: THREE.DoubleSide,
+                blending: THREE.AdditiveBlending,
+            });
+
+            let positions = [];
+
+            for (let i = 0; i < total; i++) {
+                let radius = THREE.MathUtils.randInt(149, 70);
+                let particles = randomPointSphere(radius);
+                positions.push(particles.x, particles.y, particles.z);
+            }
+
+            pointGeometry.setAttribute('position', new THREE.BufferAttribute(new Float32Array(positions), 3));
+
+            return new THREE.Points(pointGeometry, pointMaterial);
+        }
+
+
+        function toggleTextures(direction) {
+            // document.querySelector('.tutorial-container').style.display = 'none';
+            completeTutorial()
+            if (localStorage.getItem('tutorialCompleted') === 'true') {
+                document.querySelector('.tutorial-container').style.display = 'none';
+            }
+
+            stars_in_scene.forEach(stars => scene.remove(stars));
+
+            scene.children.forEach((child) => {
+                if (child instanceof THREE.Mesh || child instanceof THREE.Points) {
+                    scene.remove(child);
+                }
+            });
+
+
+
+            p += direction;
+
+            if (p < 0) {
+                p = textureSphereBg.length - 1;
+            } else if (p >= textureSphereBg.length) {
+                p = 0;
+            }
+
+            // textureSphereBg[p].dispose();
+
+
+            createSphereWithTexture(textureSphereBg[p]);
+            for (let i = 1; i <= textureSphereBg.length; i++) {
+                const label = document.getElementById(`globeLabel${i}`);
+                if (i === p + 1) {
+                    label.style.display = 'block';
+                } else {
+                    label.style.display = 'none';
+                }
+            }
+
+            // Reset the rotation of the globes
+            sphereBg.rotation.set(0, 0, 0);
+            // stars.rotation.set(0, 0, 0);
+            if (isMobile()) {
+                camera.position.set(0, 0, 600);
+            }
+            else {
+                camera.position.set(0, 0, 400);
+            }
+            controls.target.set(0, 0, 0);
+
+
+            stars_in_scene = [(createStars(texture1[0], 20, 25)),
+            (createStars(texture2[0], 20, 25)),
+            (createStars(texture4[0], 17, 10))]
+
+            stars_in_scene.forEach(stars => scene.add(stars));
+
+            // Update content based on the current index p
+            document.querySelector('.blog-slider__img img').src = posters[p];
+            document.querySelector('.blog-slider__title').innerText = postTitles[p];
+            document.querySelector('.blog-slider__code').innerText = postDates[p];
+            document.querySelector('.blog-slider__text').innerText = postContents[p];
+            if (p == 4) {
+                document.querySelector('.blog-slider__button1').style.display = 'none';
+                // document.querySelector('.blog-slider__button2').style.display = 'none';
+                document.querySelector('.blog-slider__button2').href = rulebooks[p];
+
+            }
+            else {
+                document.querySelector('.blog-slider__button1').style.display = 'block';
+                // document.querySelector('.blog-slider__button2').style.display = 'block';
+                document.querySelector('.blog-slider__button1').href = postLinks[p];
+                document.querySelector('.blog-slider__button2').href = rulebooks[p];
+            }
+
+
+        }
+
+
+        function animate() {
+            // stars.geometry.attributes.position.needsUpdate = true;
+            sphereBg.rotation.x += 0.002;
+            sphereBg.rotation.y += 0.002;
+            sphereBg.rotation.z += 0.002;
+
+            // Check camera distance and make the div visible accordingly
+            const distance = camera.position.distanceTo(sphereBg.position);
+            const newVisibility = distance < 250;
+
+            if (newVisibility !== posterDivVisible) {
+                posterDivVisible = newVisibility;
+                const posterDiv = document.getElementById('posterDiv');
+                posterDiv.style.display = posterDivVisible ? 'flex' : 'none';
+            }
+
+            controls.update();
+            renderer.render(scene, camera);
+            requestAnimationFrame(animate);
+        }
+
+        function randomPointSphere(radius) {
+            let theta = 2 * Math.PI * Math.random();
+            let phi = Math.acos(2 * Math.random() - 1);
+            let dx = 0 + (radius * Math.sin(phi) * Math.cos(theta));
+            let dy = 0 + (radius * Math.sin(phi) * Math.sin(theta));
+            let dz = 0 + (radius * Math.cos(phi));
+            return new THREE.Vector3(dx, dy, dz);
+        }
+
+        function onWindowResize() {
+            camera.aspect = container.clientWidth / container.clientHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(container.clientWidth, container.clientHeight);
+        }
+
+        window.addEventListener("resize", () => {
+            clearTimeout(timeout_Debounce);
+            timeout_Debounce = setTimeout(onWindowResize, 80);
+        });
+
+        function isMobile() {
+            return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+        }
+
+        function toggleProfileOptions() {
+            var profileOptions = document.getElementById('profileOptions');
+            profileOptions.style.display = (profileOptions.style.display === 'block') ? 'none' : 'block';
+        }
+
+        function createGlobeLabel(name) {
+            const label = document.createElement('div');
+            label.className = 'globe-label';
+            label.textContent = name;
+            document.body.appendChild(label);
+            return label;
+        }
+
+        function updateGlobeLabels() {
+            const labels = document.querySelectorAll('.globe-label');
+            labels.forEach((label, index) => {
+                if (index === p) {
+                    label.style.display = 'block';
+                } else {
+                    label.style.display = 'none';
+                }
+            });
+        }
+
+        let currentStep = 1;
+
+        // document.querySelector('.tutorial-container').style.display = 'flex';
+
+        // Check if the tutorial has been completed
+
+        if (localStorage.getItem('tutorialCompleted') === 'true') {
+            // alert('123')
+            document.querySelector('.tutorial-container').style.display = 'none';
+        }
+
+        function proceedToNextStep() {
+            const currentStepElement = document.getElementById(`step-${currentStep}`);
+            currentStepElement.style.opacity = 0;
+
+            setTimeout(() => {
+                currentStepElement.classList.remove('active');
+                currentStep += 1;
+
+                const nextStepElement = document.getElementById(`step-${currentStep}`);
+                if (nextStepElement) {
+                    nextStepElement.classList.add('active');
+                    setTimeout(() => {
+                        nextStepElement.style.opacity = 1;
+                    }, 100);
+                } else {
+                    completeTutorial();
+                }
+            }, 500); // Delay for the fade-out animation
+        }
+
+        function completeTutorial() {
+            // alert('Congratulations! You have completed the tutorial.');
+            localStorage.setItem('tutorialCompleted', 'true');
+            document.querySelector('.tutorial-container').style.display = 'none';
+            // You can add additional actions here if needed
+        }
+
+        // let threshold = 7
+
+        // if (isMobile()){
+        //     threshold = 2.5;
+        // }
+        // Simulating mouse wheel interaction for changing the first step
+        function wheelHandler(e) {
+            if (currentStep === 1 && e.deltaY < -2.5) {
+                proceedToNextStep();
+                document.removeEventListener('wheel', wheelHandler);
+            }
+        }
+        -
+            document.addEventListener('wheel', wheelHandler);
+
+        document.getElementById('tooltip').addEventListener('click', function () {
+            var tooltipContent = document.getElementById('tooltip-content');
+            tooltipContent.style.display = (tooltipContent.style.display === 'block') ? 'none' : 'block';
+        });
+
+        function closeToast() {
+            var toast = document.getElementById("toast_for_aimsa");
+            toast.style.visibility = "hidden";
+        }
+    </script>
+
+</body>
+
+</html>

@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Event Registration Confirmation</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f2f2f2;
+            color: #333;
+            margin: 0;
+            padding: 0;
+        }
+
+        container {
+            max-width: 600px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+        }
+
+        h1 {
+            color: #28a745;
+        }
+
+        ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        li {
+            margin-bottom: 10px;
+        }
+
+        p {
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+
+<body>
+    <container>
+        <h1>Event Registration Confirmation</h1>
+        <p>Dear {{ user_name }},</p>
+        
+        <p>You have successfully registered for the "{{ event }}" event. <br>Here are the details:</p>
+        
+        <ul>
+            <li><strong>Name:</strong> {{ user_name }}</li>
+            <li><strong>Event:</strong> {{ event }}</li>
+            <!-- Add more details as needed -->
+        </ul>
+        
+        <p>Thank you for participating! If you have any questions, feel free to contact us.</p>
+        <br>
+        <p>Join the Whatsapp Community of ARTIMAS 2024 using the following link:<br>https://chat.whatsapp.com/Dcw4xj5vEGd2snNfAz5wWA</p>
+        <p>Best regards,<br>AiMSA</p>
+    </container>
+</body>
+
+</html>

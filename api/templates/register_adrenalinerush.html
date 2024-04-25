@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    <script src="https://codepen.io/Tibixx/pen/rRBKBm.js"></script>
+    <script src="https://codepen.io/DonKarlssonSan/pen/jBWaad.js"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='lib/sweetalert.min.css') }}">
+    <script src="{{ url_for('static', filename='lib/jquery.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='lib/sweetalert.min.js') }}"></script>
+    <title>Artimas 2024 - Adrenaline Rush</title>
+</head>
+
+<style>
+    html,
+    body {
+        height: 100%;
+    }
+
+    body {
+        margin: 0;
+        background-color: #001010;
+    }
+
+    .background {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        /* overflow: hidden; */
+
+        &.diamond {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 400px;
+            height: 400px;
+            transform: translate(-50%, -50%) rotate(45deg);
+        }
+    }
+
+    .flowfield {
+        display: block;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        filter: blur(5px);
+        width: 12.5%;
+        transform: translate(-50%, -50%) scale(8);
+    }
+
+    .login-wrap {
+        min-height: 800px;
+        top: 10vh;
+    }
+    #paymentSection {
+            display: none;
+            /* background-color: #ffffff; */
+            /* border: 1px solid #ccc; */
+            /* border-radius: 8px; */
+            padding: 20px;
+            margin-top: 20px;
+        }
+
+        #paymentSection h3 {
+            color: #c5c5c5;
+        }
+
+        #paymentSection p {
+            color: #c9c9c9;
+        }
+
+        #paymentSection label {
+            display: block;
+            margin-top: 10px;
+            color: #868686;
+        }
+
+        #paymentSection input[type="file"] {
+            margin-top: 5px;
+        }
+
+        #paymentSection button {
+            background-color: #1161ee;
+            color: #fff;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 15px;
+        }
+
+        #paymentSection button:hover {
+            background-color: #0a4aad;
+        }
+</style>
+
+<body>
+    <div class="background">
+        <canvas id="flowfield" class="flowfield" width="400" height="400"></canvas>
+        <div class="login-wrap" style="border-radius: 15px; background-color: rgba(62, 110, 103, 0);">
+            <div class="login-html">
+                <input id="tab-1" type="radio" name="tab" class="sign-in" checked><label for="tab-1"
+                    class="tab">Register (Adrenaline Rush)</label>
+                <input id="tab-2" type="radio" name="tab" class="sign-up"><label for="tab-2" class="tab"
+                    style="display: none;"><a href="{{ url_for('register') }}">Sign Up</a></label>
+                    <div class="login-form">
+                        <form id="regForm" onsubmit="validateForm(event)">
+                             <div class="sign-in-htm">
+                                 <div class="col-sm-6 group">
+                                     <label for="name">Name</label>
+                                     <input type="text" class="form-control input" name="Name" id="name"
+                                         placeholder="Name" value="{{ user.name }}" required readonly>
+                                 </div>
+                                 <div class="col-sm-6 group">
+                                     <label for="college">College</label>
+                                     <input type="text" class="form-control input" name="College" id="college"
+                                         placeholder="College" value="{{ user.college }}" required readonly>
+                                 </div>
+     
+                                 <div class="col-sm-6 group">
+                                    <label for="dept">Department</label>
+                                    <input type="text" class="form-control input" name="Department" id="department"
+                                         placeholder="Department" value="{{ user.department }}" required readonly>
+                                 </div>
+                                 <div class="col-sm-6 group">
+                                     <label for="email">Email</label>
+                                     <input type="email" class="form-control input" name="Email" id="email"
+                                         placeholder="Email" value="{{ user.email }}" required readonly>
+                                 </div>
+     
+                                 <div class="col-sm-6 group">
+                                     <label for="tel">Phone</label>
+                                     <input type="number" name="Phone" class="form-control input" id="tel"
+                                         placeholder="Contact Number" value="{{ user.phone }}" required readonly>
+                                 </div>
+     
+                                 <!-- <input type="hidden" name="event" value="neurodrain"> -->
+                                 <div class="group">
+                                     <button class="button" type="submit" >Register</button>
+                                 </div>
+     
+                             </div>
+     
+                         </form>
+                         <div id="paymentSection" class="login-form">
+                             <center>
+                                 <p>Click or scan the QR code for payment.</p>
+                             <a href="upi://pay?pa=parthhalwane@okaxis&pn=Parth%20Halwane&am=400.00&cu=INR&aid=uGICAgIC_7NWqCA"><img src="{{ url_for('static', filename='images/qrcode.jpg') }}" alt="QR Code" id="qrCode" style="width: 50%; height: 50%; border-radius: 6px;"/><br></a>
+                             <label for="paymentScreenshot">Upload Payment Screenshot:</label>
+                             <input type="file" id="paymentScreenshot" name="paymentScreenshot" accept="image/*">
+                             <div class="group">
+                                 <button type="button" onclick="displayprev()">Back</button>
+                                 <button type="button" id="submitButton" onclick="submitForm()">Submit</button>
+                             </div>
+                         </center>                
+                         </div>
+                    </div>
+            </div>
+        </div>
+    </div>
+    <script src="{{ url_for('static', filename='js/aurora.js') }}"></script>
+    <script>
+
+function displayprev() {
+    var page1Element = document.getElementById('regForm');
+    var paymentSectionElement = document.getElementById('paymentSection')
+    page1Element.style.display = 'block';
+    paymentSectionElement.style.display = 'none';
+}
+
+function validateForm(event) {
+    event.preventDefault();
+    const form = document.querySelector('#regForm');
+    const requiredInputs = form.querySelectorAll('input[required]');
+
+    for (const input of requiredInputs) {
+        if (!input.value.trim()) {
+            alert(`Please fill in all required fields.`);
+            return false;
+        }
+    }
+
+    // Verify email on the server using AJAX
+    $.ajax({
+        url: '/verifyEmail/adrenalinerush',
+        type: 'GET',
+        data: { email: document.getElementById('email').value },
+        success: function (data) {
+            if (data.exists && !(document.getElementById('email').value === '')) {
+                swal('Error',data.error,'warning');
+            } 
+            else {
+                if (document.getElementById('email').value.endsWith('pccoepune.org')) {
+                    swal('Proceed','Member is from PCCOE. Proceed with form submission.','warning');
+                    submitForm();
+                } else {
+                    // Prompt for payment
+                    swal('Wait','Member is not from PCCOE. Proceed with payment.','warning');
+                    event.preventDefault();
+                    // Show the payment section
+                    const paymentSection = document.getElementById('paymentSection');
+                    const formDiv = document.getElementById('regForm');
+                    if (paymentSection) {
+                        formDiv.style.display = 'none';
+                        paymentSection.style.display = 'block';
+                    }
+                }
+            }
+        },
+        error: function (error) {
+            console.error('Error:', error);
+        }
+    });
+
+    return false;
+}
+
+function submitForm() {
+    // Get form data
+    const paymentScreenshot = document.getElementById('paymentScreenshot').files[0];
+    let email = document.getElementById('email').value.endsWith('pccoepune.org')
+    if (!email){
+        if (paymentScreenshot === undefined){
+            swal('Error','Upload the Screenshot','error');
+            return
+        }
+    }
+
+    const submitButton = document.getElementById('submitButton');
+    submitButton.disabled = true;
+    const formData = new FormData(document.getElementById('regForm'));
+
+    swal('Proceed','Submitting your form','info');
+
+    // Append the payment screenshot to the form data
+    formData.append('paymentScreenshot', paymentScreenshot);
+
+
+    // Perform an AJAX request to submit the form data
+    $.ajax({
+        url: '/submitForm/adrenalinerush', // Replace with your server endpoint for form submission
+        type: 'POST',
+        data: formData,
+        contentType: false,
+        processData: false,
+        success: function (data) {
+            // Handle success, e.g., show a success message
+            swal("Success", "Registration done successfully", "success");
+            submitButton.disabled = false;
+            window.location.href = '/events';
+
+        },
+        error: function (error) {
+            // Handle error, e.g., show an error message
+            console.error('Error submitting form:', error);
+            swal("Error", "Error Submitting your form , please try later", "error");
+
+            submitButton.disabled = false;
+
+        }
+    });
+
+    return false;
+}
+
+// Rest of your script...
+
+
+
+
+        // Custom draw function to display flowfield
+        ff.onDraw = (vector, x, y) => {
+            // Clear canvas
+            if (x === 0 && y === 0) {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+            }
+
+            // Vector angular size
+            const xmove = vector.getLength() * Math.abs(vector.x);
+            const ymove = vector.getLength() * Math.abs(vector.y);
+
+            // Color mapping
+            // Northern Lights
+            const red = Math.round((-20 * xmove) + (80 * ymove) + (50 - (0.6 * y * heightColorScaling)));
+            const green = Math.round((180 * xmove) + (20 * ymove) - 60 + (0.4 * y * heightColorScaling));
+            const blue = Math.round((50 * xmove) + (30 * ymove) + (40 - (0.5 * y * heightColorScaling)) + (0.5 * y * heightColorScaling));
+            // Lava Lamp
+            // const red = Math.round((20 * xmove) + (230 * ymove) + 10 + (0.6 * y * heightColorScaling));
+            // const green = Math.round((100 * xmove) - (60 * ymove));
+            // const blue = Math.round((200 * xmove) + (60 * ymove) + (20 - (0.4 * y * heightColorScaling)));
+            // Candy
+            // const red = Math.round((120 * xmove) + (140 * ymove) + (0.4 * y * heightColorScaling));
+            // const green = Math.round((90 * xmove) + (10 * ymove));
+            // const blue = Math.round((20 * xmove) + (100 * ymove) - 50 + (0.4 * y * heightColorScaling));
+
+            // const red = Math.round((120 * xmove) + (140 * ymove) + (0.4 * y * heightColorScaling));
+            // const green = Math.round((90 * xmove) + (10 * ymove) + (0.4 * x * widthColorScaling));
+            // const blue = Math.round((20 * xmove) + (100 * ymove) - 50 + (0.4 * y * heightColorScaling));
+
+            // Open
+            ctx.save();
+
+            // Draw tile
+            ctx.fillStyle = `rgba(${red}, ${green}, ${blue}, 0.8)`;
+            ctx.fillRect(x * ctxScale.x, y * ctxScale.y, ctxScale.x, ctxScale.y);
+
+            // Close
+            ctx.restore();
+        }
+
+
+        // Custom added vector to add mouse interaction
+        ff.manipulateVector = (vector, x, y) => {
+            // Get root position of drawn element
+            const pos = new Vector(
+                (x * ctxScale.x) + (0.5 * ctxScale.x),
+                (y * ctxScale.y) + (0.5 * ctxScale.y),
+            );
+
+            // Get the distance to mouse in from 0 to 1 (1+ actually if you go outside the canvas)
+            const mouseEffect = new Vector(
+                (mouse.x - pos.x) / canvas.width,
+                (mouse.y - pos.y) / canvas.height,
+            );
+
+            vector.addTo(mouseEffect);
+            // Cap to max 1
+            if (vector.getLength() > 1) vector.setLength(1);
+        }
+
+        // Animate
+        let lastStep = 0;
+        function step(time) {
+            ff.update(time - lastStep || 0);
+            lastStep = time;
+            window.requestAnimationFrame(step);
+        }
+        step();
+
+        function updateMouse(e) {
+            mouse.x = e.clientX;
+            mouse.y = e.clientY;
+        }
+        document.addEventListener('mousemove', updateMouse);
+    </script>
+</body>
+
+</html>

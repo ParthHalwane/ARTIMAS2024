@@ -1,0 +1,901 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+	    <link rel="icon" href="{{ url_for('static', filename='images/favicon.ico') }}" type="image/x-icon">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
+    <!-- <title>Artimas 2024 - Houdini Heist</title> -->
+    <script src="https://codepen.io/Tibixx/pen/rRBKBm.js"></script>
+    <script src="https://codepen.io/DonKarlssonSan/pen/jBWaad.js"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='lib/sweetalert.min.css') }}">
+    <script src="{{ url_for('static', filename='lib/jquery.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='lib/sweetalert.min.js') }}"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+
+
+
+    <title>Artimas 2024 - Hack Matrix</title>
+</head>
+
+<style>
+    
+    @import url(https://fonts.googleapis.com/css?family=Orbitron:700);
+        body {
+            margin: 0;
+            color: #6a6f8c;
+            /* background:#c8c8c8; */
+            font: 600 16px/18px 'Open Sans', sans-serif;
+        }
+
+        *,
+        :after,
+        :before {
+            box-sizing: border-box
+        }
+
+        .clearfix:after,
+        .clearfix:before {
+            content: '';
+            display: table
+        }
+
+        .clearfix:after {
+            clear: both;
+            display: block
+        }
+
+        body {
+            margin: 0;
+            overflow: hidden;
+            background-color: #000000;
+        }
+
+        canvas {
+            display: block;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: -1;
+            /* Send the canvas behind other elements */
+        }
+
+        a {
+            color: inherit;
+            text-decoration: none
+        }
+
+        .login-wrap {
+            width: 100%;
+            margin: auto;
+            max-width: 525px;
+            min-height: 670px;
+            position: relative;
+            /* margin-top: 20px; */
+            /* background:url(https://raw.githubusercontent.com/khadkamhn/day-01-login-form/master/img/bg.jpg) no-repeat center; */
+            box-shadow: 0 12px 15px 0 rgba(0, 0, 0, .24), 0 17px 50px 0 rgba(0, 0, 0, .19);
+        }
+
+        .login-html {
+            width: 100%;
+            height: 100vh;
+            position: absolute;
+            padding: 90px 70px 50px 70px;
+            /* background:rgba(40,57,101,.9); */
+        }
+
+        .login-html .sign-in-htm,
+        .login-html .sign-up-htm {
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            position: absolute;
+            /* transform:rotateY(180deg); */
+            backface-visibility: hidden;
+            transition: all .4s linear;
+        }
+
+        .login-html .sign-in,
+        .login-html .sign-up,
+        .login-form .group .check {
+            display: none;
+        }
+
+        .login-html .tab,
+        .login-form .group .label,
+        .login-form .group .button {
+            text-transform: uppercase;
+        }
+
+        .login-html .tab {
+            font-size: 22px;
+            margin-right: 15px;
+            padding-bottom: 5px;
+            margin: 0 15px 10px 0;
+            display: inline-block;
+            border-bottom: 2px solid transparent;
+        }
+
+        .login-html .sign-in:checked+.tab,
+        .login-html .sign-up:checked+.tab {
+            color: #fff;
+            border-color: #1161ee;
+        }
+
+        .login-form {
+            min-height: 345px;
+            position: relative;
+            perspective: 1000px;
+            transform-style: preserve-3d;
+        }
+
+        .login-form .group {
+            margin-bottom: 15px;
+        }
+
+        .login-form .group .label,
+        .login-form .group .input,
+        .login-form .group .button {
+            width: 100%;
+            color: #fff;
+            display: block;
+        }
+
+        .login-form .group .input,
+        .login-form .group .button {
+            border: none;
+            padding: 15px 20px;
+            border-radius: 25px;
+            background: rgba(255, 255, 255, .1);
+        }
+
+        .login-form .group input[data-type="password"] {
+            text-security: circle;
+            -webkit-text-security: circle;
+        }
+
+        .login-form .group .label {
+            color: #aaa;
+            font-size: 12px;
+        }
+
+        .login-form .group .button {
+            background: #1161ee;
+        }
+
+        .login-form .group label .icon {
+            width: 15px;
+            height: 15px;
+            border-radius: 2px;
+            position: relative;
+            display: inline-block;
+            background: rgba(255, 255, 255, .1);
+        }
+
+        .login-form .group label .icon:before,
+        .login-form .group label .icon:after {
+            content: '';
+            width: 10px;
+            height: 2px;
+            background: #fff;
+            position: absolute;
+            transition: all .2s ease-in-out 0s;
+        }
+
+        .login-form .group label .icon:before {
+            left: 3px;
+            width: 5px;
+            bottom: 6px;
+            transform: scale(0) rotate(0);
+        }
+
+        /* .login-form .group label .icon:after{
+	top:6px;
+	right:0;
+	transform:scale(0) rotate(0);
+} */
+        .login-form .group .check:checked+label {
+            color: #fff;
+        }
+
+        .login-form .group .check:checked+label .icon {
+            background: #1161ee;
+        }
+
+        /* .login-form .group .check:checked + label .icon:before{
+	transform:scale(1) rotate(45deg);
+}
+.login-form .group .check:checked + label .icon:after{
+	transform:scale(1) rotate(-45deg);
+} */
+        /* .login-html .sign-in:checked + .tab + .sign-up + .tab + .login-form .sign-in-htm{
+	transform:rotate(0);
+}
+.login-html .sign-up:checked + .tab + .login-form .sign-up-htm{
+	transform:rotate(0);
+} */
+
+        .hr {
+            height: 2px;
+            margin: 60px 0 50px 0;
+            background: rgba(255, 255, 255, .2);
+        }
+
+        .foot-lnk {
+            text-align: center;
+        }
+
+        .login-form.active {
+            display: block;
+        }
+
+        .login-form {
+            display: none;
+        }
+
+        button {
+            background-color: #1161ee;
+            color: #fff;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 15%;
+            cursor: pointer;
+        }
+    </style>
+    <style>
+        html,
+        body {
+            height: 100%;
+        }
+
+        body {
+            margin: 0;
+            /* background-color: #001010; */
+        }
+
+        .background {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            /* overflow: hidden; */
+
+            &.diamond {
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                width: 400px;
+                height: 400px;
+                transform: translate(-50%, -50%) rotate(45deg);
+            }
+        }
+
+        .flowfield {
+            display: block;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            filter: blur(5px);
+            width: 12.5%;
+            transform: translate(-50%, -50%) scale(8);
+        }
+
+        .login-wrap {
+            min-height: 800px;
+            top: 10vh;
+        }
+
+        #paymentSection {
+            display: none;
+            /* background-color: #ffffff; */
+            /* border: 1px solid #ccc; */
+            /* border-radius: 8px; */
+            padding: 20px;
+            margin-top: 20px;
+        }
+
+        #paymentSection h3 {
+            color: #c5c5c5;
+        }
+
+        #paymentSection p {
+            color: #c9c9c9;
+        }
+
+        #paymentSection label {
+            display: block;
+            margin-top: 10px;
+            color: #868686;
+        }
+
+        #paymentSection input[type="file"] {
+            margin-top: 5px;
+        }
+
+        #paymentSection button {
+            background-color: #1161ee;
+            color: #fff;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 15px;
+        }
+
+        #paymentSection button:hover {
+            background-color: #0a4aad;
+        }
+
+        a {
+        text-decoration: none;
+        font-size: 1.5rem;
+    }
+
+    li {
+        list-style: none;
+        /* font-family: 'Montserrat', sans-serif;
+         */
+  font-family: 'Orbitron', sans-serif;
+
+    }
+
+    b {
+        font-size: 1.5rem;
+    }
+
+    label{
+        color: aliceblue;
+    }
+
+    .navbar {
+            align-items: center;
+            justify-content: space-between;
+            padding: 4px 20px 0px 20px;
+            background-color: #0000002b;
+            /* color: #dd2222; */
+            position: absolute;
+            top: 0;
+            width: 100%;
+            left: 0%;
+            z-index: 1000;
+        }
+
+        .nav-links a,
+        .aa {
+            color: rgb(222, 252, 255);
+        }
+
+        .menu {
+            display: flex;
+            gap: 0rem;
+            font-size: 18px;
+            justify-content: flex-end;
+        }
+
+        .menu li:hover,
+        .aa:hover,
+        a:hover {
+            background-color: #3f788d3e;
+            color: #ffffff;
+            border-radius: 5px;
+            transition: 0.3s ease;
+            text-decoration: none;
+        }
+
+        .menu li {
+            padding: 5px 10px;
+            font-family: 'Orbitron', sans-serif;
+            size: 2.5rem;
+        }
+
+        .logo {
+            position: absolute;
+            left: 20px; /* Adjust as needed */
+        }
+
+        .navbar-toggler{
+            background-color: #ffffff;
+        }
+
+        @media (max-width: 768px) {
+            .menu {
+                flex-direction: column;
+            }
+
+            .navbar-toggler {
+                order: -1; /* Move the toggle button to the beginning */
+                right: 20px;
+                position: absolute;
+                top: 10px;
+            }
+
+            .navbar-collapse {
+                position: absolute;
+                width: 100%;
+                top: 50px; /* Adjust based on your logo height and navbar height */
+                background-color: #0000003d; /* Adjust to match navbar background */
+                left: 0;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="background">
+        <canvas id="flowfield" class="flowfield" width="400" height="400"></canvas>
+        <section class="top-nav" style="z-index: 100;">
+            <nav class="navbar navbar-expand-lg navbar-light">
+                <div class="logo">
+                    <!-- Add your SVG logo here -->
+                    <img src="{{ url_for('static', filename='images/logo_cropped.svg') }}" alt="Logo" height="27vh" />
+                </div>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+                    aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon" style="background-color: white;"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="nav-links ml-auto">
+                        <div class="menu">
+                            <li><a href="{{url_for('index')}}"><b>Home</b></a></li>
+                            <li><a href="{{url_for('events')}}"><b>Events</b></a></li>
+				 <li><a href="{{ url_for('calendar') }}"><b>Calendar</b>
+                                </a></li>
+                              <li><a href="{{ url_for('sponsors') }}"> <b>Sponsors</b>
+                                </a></li>
+                            <!-- {% if current_user.is_authenticated %} -->
+                           
+                            <li><a href="{{url_for('profile')}}"><span class="glyphicon glyphicon-user"></span> <b>Profile</b></a></li>
+				 <li><a href="{{ url_for('logout') }}"><span class="glyphicon glyphicon-log-out"></span>
+                                    <b>Logout</b> </a></li>
+                            <!-- {% else %} -->
+                            <li><a href="{{ url_for('login') }}"><span class="glyphicon glyphicon-log-in"></span> <b>Login</b>
+                                </a></li>
+                            <!-- {% endif %} -->
+                        </div>
+                    </ul>
+                </div>
+            </nav>
+        </section>
+        <div class="login-wrap">
+            <div class="login-html">
+                <center>
+                    <input id="tab-2" type="radio" name="tab" class="sign-up" checked><label for="tab-2"
+                    class="tab">Hack Matrix</label>
+                </center>
+
+                <div class="login-form active form-page" id="page1">
+                    <form id="member1Form">
+                        <div class="sign-up-htm">
+                            <div class="group">
+                                <label for="name1" class="label">Name of Team Leader</label>
+                                <input type="text" id="name1" name="name1" class="input form-control" value="{{ user.name }}" required readonly>
+                            </div>
+                            <div class="group">
+                                <label for="email1" class="label">Email of Team Leader</label>
+                                <input type="email" id="email1" name="email1" class="input form-control" value="{{ user.email }}" required readonly>
+                            </div>
+                            <div class="group">
+                                <label for="college1" class="label">College of Team Leader</label>
+                                <input type="text" id="college1" name="college1" class="input form-control" value="{{ user.college }}" required readonly>
+                            </div>
+                            <div class="group">
+                                <label for="phone1" class="label">Phone No. of Team Leader (10 digits)</label>
+                                <input type="tel" id="phone1" name="phone1" class="input form-control" value="{{ user.phone }}" required readonly>
+                            </div>
+                            <div class="group">
+                                <label for="github1" class="label">Github Profile (Url)</label>
+                                <input type="text" id="github1" name="github1" class="input form-control"  required>
+                            </div>
+                           <center>
+                            <div class="group">
+                                <button type="button" onclick="nextPage(1)">Next</button>
+                            </div>
+                           </center>
+                        </div>
+                    </form>
+                </div>
+
+
+                <div class="login-form form-page" id="page2">
+                    <form id="member2Form">
+                        <div class="sign-up-htm">
+                            <div class="group">
+                                <label for="name2" class="label">Name of Team member 2</label>
+                                <input type="text" id="name2" name="name2" class="input form-control" required>
+                            </div>
+                            <div class="group">
+                                <label for="email2" class="label">Email of Team member 2</label>
+                                <input type="email" id="email2" name="email2" class="input form-control" required>
+                            </div>
+                            <div class="group">
+                                <label for="college2" class="label">College of Team member 2</label>
+                                <input type="text" id="college2" name="college2" class="input form-control" required>
+                            </div>
+                            <div class="group">
+                                <label for="phone2" class="label">Phone No. of Team member 2 (10 digits)</label>
+                                <input type="tel" id="phone2" name="phone2" pattern="[0-9]{10}" class="input form-control" required>
+                            </div>
+                            <div class="group">
+                                <label for="github2" class="label">Github Profile (Url)</label>
+                                <input type="text" id="github2" name="github2" class="input form-control"  required>
+                            </div>
+                           <center>
+                            <div class="group">
+                                <button type="button" onclick="prevPage(2)">Previous</button>
+                                <button type="button" onclick="nextPage(2)">Next</button>
+                            </div>
+                           </center>
+                        </div>
+                    </form>
+                </div>
+
+
+                <div class="login-form form-page" id="page3">
+                    <form id="member3Form">
+                        <div class="sign-up-htm">
+                            <div class="group">
+                                <label for="name3" class="label">Name (Team member 3)</label>
+                                <input type="text" id="name3" name="name3" class="input form-control" required>
+                            </div>
+                            <div class="group">
+                                <label for="email3" class="label">Email of Team member 3</label>
+                                <input type="email" id="email3" name="email3" class="input form-control" required>
+                            </div>
+                            <div class="group">
+                                <label for="college3" class="label">College of Team member 3</label>
+                                <input type="text" id="college3" name="college3" class="input form-control" required>
+                            </div>
+                            <div class="group">
+                                <label for="phone3" class="label">Phone No. of Team member 3 (10 digits)</label>
+                                <input type="tel" pattern="[0-9]{10}" id="phone3" name="phone3" class="input form-control" required>
+                            </div>
+                            <div class="group">
+                                <label for="github3" class="label">Github Profile (Url)</label>
+                                <input type="text" id="github3" name="github3" class="input form-control"  required>
+                            </div>
+                           <center>
+                            <div class="group">
+                                <button type="button" onclick="prevPage(3)">Previous</button>
+                                <button type="button" onclick="nextPage(3)">Next</button>
+                            </div>
+                           </center>
+                        </div>
+                    </form>
+                </div>
+
+
+                <div class="login-form form-page" id="page4">
+                    <form id="member4Form">
+                        <div class="sign-up-htm">
+                            <div class="group">
+                                <label for="name4" class="label">Name of Team member 4</label>
+                                <input type="text" id="name4" name="name4" class="input form-control" required>
+                            </div>
+                            <div class="group">
+                                <label for="email4" class="label">Email of Team member 4</label>
+                                <input type="email" id="email4" name="email4" class="input form-control" required>
+                            </div>
+                            <div class="group">
+                                <label for="college4" class="label">College of Team member 4</label>
+                                <input type="text" id="college4" name="college4" class="input form-control" required>
+                            </div>
+                            <div class="group">
+                                <label for="phone4" class="label">Phone No. of Team member 4 (10 digits)</label>
+                                <input type="tel" pattern="[0-9]{10}" id="phone4" name="phone4" class="input form-control" required>
+                            </div>
+                            <div class="group">
+                                <label for="github4" class="label">Github Profile (Url)</label>
+                                <input type="text" id="github4" name="github4" class="input form-control"  required>
+                            </div>
+                           <center>
+                            <div class="group">
+                                <button type="button" onclick="prevPage(4)">Previous</button>
+                                <button type="button" onclick="skip()">Skip</button>
+                                <button type="button" onclick="nextPage(4)">Next</button>
+                            </div>
+                           </center>
+                        </div>
+                    </form>
+                </div>
+
+                <div id="paymentSection" class="login-form">
+                    <center>
+                        <p>Click or scan the QR code for payment.</p>
+                    <a href="upi://pay?pa=parthhalwane@okaxis&pn=Parth%20Halwane&am=300.00&cu=INR&aid=uGICAgIC_7NWqCA"><img src="{{ url_for('static', filename='images/300.png') }}" alt="QR Code" id="qrCode" style="width: 50%; height: 50%; border-radius: 6px;"/><br></a>
+                    <label for="paymentScreenshot">Upload Payment Screenshot:</label>
+                    <input type="file" id="paymentScreenshot" name="paymentScreenshot" accept="image/*">
+                    <div class="group">
+                        <button type="button" onclick="prevPage(5)">Back</button>
+                        <button type="button" id="submitButton" onclick="submitForm()">Submit</button>
+                    </div>
+                </center>                
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        let currentPage = 1;
+
+        function showPage(page) {
+            const pages = document.querySelectorAll('.login-form');
+            pages.forEach((pageElement, index) => {
+                if (index + 1 === page) {
+                    pageElement.classList.add('active');
+                } else {
+                    pageElement.classList.remove('active');
+                }
+            });
+        }
+
+        function prevPage(page) {
+            if (page === 5) {
+                const paymentSection = document.getElementById('paymentSection');
+                if (paymentSection) {
+                    paymentSection.style.display = 'none';
+                }
+            }
+            if (page > 1) {
+                currentPage = page - 1;
+                showPage(currentPage);
+            }
+        }
+
+        function skip() {
+            let temp_email = document.getElementById('email4');
+            let temp_name = document.getElementById('name4');
+            let temp_college = document.getElementById('college4');
+            let temp_phone = document.getElementById('phone4');
+            let temp_github = document.getElementById('github4');
+
+
+            temp_email.style.visibility = 'hidden';
+            temp_name.style.visibility = 'hidden';
+            temp_college.style.visibility = 'hidden';
+            temp_phone.style.visibility = 'hidden';
+            temp_github.style.visibility = 'hidden';
+
+
+            temp_email.value = 'aimsa.pccoepune.org'
+            temp_name.value = 'Nan'
+            temp_college.value = 'Nan'
+            temp_phone.value = 'Nan'
+            temp_github.value = 'Nan'
+
+            nextPage(4);
+
+        }
+
+        function validateForm(page) {
+            const form = document.getElementById(`member${page}Form`);
+            if (!form) {
+                return false;
+            }
+
+            const emailInput = form.querySelector('input[name^="email"]');
+            const email = emailInput.value.trim();
+
+            // Check if the email is distinct for each member
+            const previousEmails = Array.from(document.querySelectorAll('input[name^="email"]'))
+                .slice(0, currentPage - 1)
+                .map(input => input.value.trim());
+
+            if (previousEmails.includes(email)) {
+                swal("Oops !", 'Duplicate email found. Please enter distinct email addresses for each member.', "warning");
+                return false;
+            }
+
+            // Skip validation for page 4 if all fields are empty or the leader left them blank
+            if (page === 4 && email !== '') {
+                const member4Inputs = Array.from(form.querySelectorAll('input')).map(input => input.value.trim());
+                if (member4Inputs.every(value => value === '')) {
+                    return true;
+                }
+            }
+
+            return true;
+        }
+
+        function nextPage(page) {
+            if (validateForm(currentPage)) {
+                const form = document.getElementById(`member${currentPage}Form`);
+                if (!form) {
+                    return;
+                }
+
+                // Check if all required fields are filled
+                const requiredInputs = form.querySelectorAll('input[required]');
+
+                for (const input of requiredInputs) {
+                    if (!input.value.trim()) {
+                        swal("Error", 'Please fill in all required fields.', "warning");
+                        return;
+                    }
+                }
+
+                // Verify email on the server using AJAX
+                $.ajax({
+                    url: '/verifyEmail/hackmatrix',
+                    type: 'GET',
+                    data: { email: document.getElementById(`email${currentPage}`).value },
+                    success: function (data) {
+                        if (data.exists && !(document.getElementById(`email${currentPage}`).value === '')) {
+                            swal("Oops !", data.error, "error");
+                        } else {
+                            currentPage += 1;
+
+                            // If this is the last member's entry
+                            if (currentPage > 4) {
+                                // Check if all members are from 'pccoepune.org'
+                                const emailInputs = Array.from(document.querySelectorAll('input[name^="email"]'));
+                                const nonEmptyEmails = emailInputs.map(emailInput => emailInput.value.trim()).filter(email => email !== '');
+
+                                const allMembersFromPCCOE = nonEmptyEmails.every(email => email.endsWith('pccoepune.org'));
+
+                                if (nonEmptyEmails.length === 0) {
+                                    // No email entered, handle this case accordingly
+                                } else if (allMembersFromPCCOE) {
+                                    // Prompt for submission
+                                    swal("Proceed", 'All members are from PCCOE. Proceed with form submission.', "warning");
+                                    // You may want to submit the form data to your server here
+                                    submitForm()
+                                    // console.log('Form data submitted:', nonEmptyEmails);
+                                } else {
+                                    // Prompt for payment
+                                    swal("Wait", 'At least one member is not from PCCOE. Proceed with payment.', "warning");
+                                    // Show the payment section
+                                    const paymentSection = document.getElementById('paymentSection');
+                                    if (paymentSection) {
+                                        const lastPage = document.getElementById(`page${currentPage - 1}`);
+                                        lastPage.classList.remove('active');
+                                        paymentSection.style.display = 'block';
+                                    }
+                                }
+                            } else {
+                                // Move to the next page
+                                showPage(currentPage);
+                            }
+                        }
+                    },
+                    error: function (error) {
+                        console.error('Error:', error);
+                    }
+                });
+            }
+        }
+
+        function submitForm() {
+            // Collect form data using FormData
+            const submitButton = document.getElementById('submitButton');
+            submitButton.disabled = true;
+
+            const formData = new FormData();
+            const formPages = document.querySelectorAll('.form-page form');
+            // console.log(formPages)
+
+            formPages.forEach((form, index) => {
+                const formInputs = Array.from(form.querySelectorAll('input, select'));
+                formInputs.forEach(input => {
+                    // Use .append() for all form inputs
+                    // console.log(input.name, input.value.trim(),input)
+                    formData.append(input.name, input.value.trim());
+                });
+            });
+
+            // console.log(formData)
+
+            const paymentScreenshotInput = document.getElementById('paymentScreenshot');
+            const paymentScreenshotFile = paymentScreenshotInput.files[0];
+
+            // Check if a file is selected and use .append() for the file
+            if (paymentScreenshotFile) {
+                formData.append('paymentScreenshot', paymentScreenshotFile, paymentScreenshotFile.name);
+            }
+            $.ajax({
+                url: '/submitForm/hackmatrix',
+                type: 'POST',
+                processData: false,
+                contentType: false,
+                data: formData
+            })
+                .then(function (response) {
+                    // Handle success
+                    swal("Success", "Registration done successfully", "success");
+                    console.log('Server response:', response);
+
+                    // Enable the submit button
+                    submitButton.disabled = false;
+
+                    // Change the page
+                    window.location.href = '/events';
+                })
+                .fail(function (error) {
+                    // Handle failure
+                    console.error('Error submitting form:', error);
+
+                    // Enable the submit button on error
+                    submitButton.disabled = false;
+                });
+        }
+    </script>
+    <script src="{{ url_for('static', filename='js/aurora.js') }}"></script>
+    <script>
+        // Custom draw function to display flowfield
+        ff.onDraw = (vector, x, y) => {
+            // Clear canvas
+            if (x === 0 && y === 0) {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+            }
+
+            // Vector angular size
+            const xmove = vector.getLength() * Math.abs(vector.x);
+            const ymove = vector.getLength() * Math.abs(vector.y);
+
+            // Color mapping
+            // Northern Lights
+            const red = Math.round((-20 * xmove) + (80 * ymove) + (50 - (0.6 * y * heightColorScaling)));
+            const green = Math.round((180 * xmove) + (20 * ymove) - 60 + (0.4 * y * heightColorScaling));
+            const blue = Math.round((50 * xmove) + (30 * ymove) + (40 - (0.5 * y * heightColorScaling)) + (0.5 * y * heightColorScaling));
+            // Lava Lamp
+            // const red = Math.round((20 * xmove) + (230 * ymove) + 10 + (0.6 * y * heightColorScaling));
+            // const green = Math.round((100 * xmove) - (60 * ymove));
+            // const blue = Math.round((200 * xmove) + (60 * ymove) + (20 - (0.4 * y * heightColorScaling)));
+            // Candy
+            // const red = Math.round((120 * xmove) + (140 * ymove) + (0.4 * y * heightColorScaling));
+            // const green = Math.round((90 * xmove) + (10 * ymove));
+            // const blue = Math.round((20 * xmove) + (100 * ymove) - 50 + (0.4 * y * heightColorScaling));
+
+            // const red = Math.round((120 * xmove) + (140 * ymove) + (0.4 * y * heightColorScaling));
+            // const green = Math.round((90 * xmove) + (10 * ymove) + (0.4 * x * widthColorScaling));
+            // const blue = Math.round((20 * xmove) + (100 * ymove) - 50 + (0.4 * y * heightColorScaling));
+
+            // Open
+            ctx.save();
+
+            // Draw tile
+            ctx.fillStyle = `rgba(${red}, ${green}, ${blue}, 0.8)`;
+            ctx.fillRect(x * ctxScale.x, y * ctxScale.y, ctxScale.x, ctxScale.y);
+
+            // Close
+            ctx.restore();
+        }
+
+
+        // Custom added vector to add mouse interaction
+        ff.manipulateVector = (vector, x, y) => {
+            // Get root position of drawn element
+            const pos = new Vector(
+                (x * ctxScale.x) + (0.5 * ctxScale.x),
+                (y * ctxScale.y) + (0.5 * ctxScale.y),
+            );
+
+            // Get the distance to mouse in from 0 to 1 (1+ actually if you go outside the canvas)
+            const mouseEffect = new Vector(
+                (mouse.x - pos.x) / canvas.width,
+                (mouse.y - pos.y) / canvas.height,
+            );
+
+            vector.addTo(mouseEffect);
+            // Cap to max 1
+            if (vector.getLength() > 1) vector.setLength(1);
+        }
+
+        // Animate
+        let lastStep = 0;
+        function step(time) {
+            ff.update(time - lastStep || 0);
+            lastStep = time;
+            window.requestAnimationFrame(step);
+        }
+        step();
+
+        function updateMouse(e) {
+            mouse.x = e.clientX;
+            mouse.y = e.clientY;
+        }
+        document.addEventListener('mousemove', updateMouse);
+    </script>
+</body>
+
+</html>
